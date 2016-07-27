@@ -61,6 +61,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
   &quot;success&quot;: true,
   &quot;status&quot;: 200
 }" doc:name="Set Payload"/>
+        <logger message="&quot;Request recieved&quot;" level="INFO" doc:name="Logger"/>
     </flow>
     <flow name="post:/users:application/xml:api-config">
         <set-payload value="{ &quot;message&quot;: &quot;The user was CREATED successfuly&quot; }" doc:name="Set Payload"/>
