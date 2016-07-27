@@ -1,0 +1,108 @@
+#%RAML 0.8
+title: User Administration API
+version: 1.0
+baseUri: http://server/api/{version}
+/users:
+  displayName: Users
+  description: Users resource for adminstration of users
+  get:
+    description: Retrieve all users
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "users":
+                [
+                  "user": {
+                    "userId": "001",
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "middleName": "A",
+                    "department": "IT",
+                    "hireDate": "10/01/2015",
+                    "statusDate": "05/01/2016",
+                    "jobTitle": "Developer"
+                  },
+                  "user": {
+                    "userId": "003",
+                    "firstName": "David",
+                    "lastName": "Jones",
+                    "middleName": "B",
+                    "department": "HR",
+                    "hireDate": "5/01/2015",
+                    "statusDate": "03/01/2016",
+                    "jobTitle": "HR Analyst"
+                  }                  
+                ],
+                "success": true,
+                "status": 200
+              }
+  post:
+    description: Create a new user
+    body:
+      application/xml:
+        schema: |
+          <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="user">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element type="xs:string" name="userId"/>
+                  <xs:element type="xs:string" name="firstName"/>
+                  <xs:element type="xs:string" name="lastName"/>
+                  <xs:element type="xs:string" name="middleName"/>
+                  <xs:element type="xs:string" name="department"/>
+                  <xs:element type="xs:string" name="hireDate"/>
+                  <xs:element type="xs:string" name="statusDate"/>
+                  <xs:element type="xs:string" name="jobTitle"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:schema> 
+    responses:
+      200:
+          body:
+            application/json:
+              example: |
+                { "message": "The user was CREATED successfuly" }      
+  /{userId}:
+    description: Get the user with `userId = {userId}`
+    get:
+      description: Get the user with `userId = {userId}`
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "user": {
+                    "userId": "001",
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "middleName": "A",
+                    "department": "IT",
+                    "hireDate": "10/01/2015",
+                    "statusDate": "05/01/2016",
+                    "jobTitle": "Developer"
+                  }                  
+                  "success": true,
+                  "status": 200
+                }    
+    delete:
+      description: Delete the user with `userId = {userId}`
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { "message": "The user was DELETED successfuly" } 
+              
+              
+              
+
+
+
+    
+    
+   
