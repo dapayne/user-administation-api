@@ -10,7 +10,11 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 	
     <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
     <apikit:config name="api-config" raml="api.raml" consoleEnabled="false" doc:name="Router"/>
-    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="dpayne-mac" password="1760" database="mac_users" doc:name="MySQL Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="dpayne-mac" password="1760" database="mac_users" doc:name="MySQL Configuration">
+        <db:connection-properties>
+            <db:property key="useSSL" value="false"/>
+        </db:connection-properties>
+    </db:mysql-config>
     <flow name="api-main">
         <http:listener config-ref="api-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
         <apikit:router config-ref="api-config" doc:name="APIkit Router"/>
@@ -21,7 +25,9 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
         <apikit:console config-ref="api-config" doc:name="APIkit Console"/>
     </flow>
     <flow name="delete:/users/{userId}:api-config">
-        <set-payload value="{ &quot;message&quot;: &quot;The user was DELETED successfuly&quot; }" doc:name="Set Payload"/>
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from mac_users.users where userid = #[message.inboundProperties.'http.uri.params'.userId]]]></db:parameterized-query>
+        </db:delete>
 
     </flow>
     <flow name="get:/users:api-config">
