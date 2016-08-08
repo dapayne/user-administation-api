@@ -1,0 +1,11 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "allusers"
+        }
+    },
+    "outputMessageMetadata": {},
+    "id": "930506b2-eca1-4bd9-9adb-b558f180952f",
+    "version": "5.2.0.0"
+}

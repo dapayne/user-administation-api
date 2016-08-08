@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mspairport.mule</groupId>
 	<artifactId>user-administration-api</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>mule</packaging>
 	<name>Mule user-administration-api Application</name>
 
@@ -133,16 +133,35 @@
 			<version>${mule.version}</version>
 			<scope>test</scope>
 		</dependency>
-	<dependency>
+		<dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.2.2</version>
             <scope>provided</scope>
         </dependency>
+       
+    <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-db</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.3</version>
+            <scope>runtime</scope>
+        </dependency>
+    <dependency>
+            <groupId>com.mulesoft.weave</groupId>
+            <artifactId>mule-plugin-weave_2.11</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 	<repositories>
-          <repository>
+            <repository>
             <id>Central</id>
             <name>Central</name>
             <url>http://repo1.maven.org/maven2/</url>
@@ -166,5 +185,11 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+	<distributionManagement>
+	   <snapshotRepository>
+	      <id>mspairport-mule</id>
+	      <url>http://localhost:9091/nexus/content/repositories/mspairport-mule/</url>
+	   </snapshotRepository>
+	</distributionManagement>    
 
 </project>
