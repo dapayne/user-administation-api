@@ -189,8 +189,8 @@
 	<distributionManagement>
 	   <snapshotRepository>
 	      <id>mspairport-mule</id>
-	      <url>http://localhost:9091/nexus/content/repositories/mspairport-mule/</url>
+	      <url>http://nexus.mspairport.com:8081/nexus/content/repositories/mspairport-mule/</url>
 	   </snapshotRepository>
-	</distributionManagement>    
+	</distributionManagement>        
 
 </project>
