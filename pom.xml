@@ -188,7 +188,7 @@
     </pluginRepositories>
 	<distributionManagement>
 	   <snapshotRepository>
-	      <id>MuleRepository</id>
+	      <id>mspairport-mule</id>
 	      <url>http://nexus.mspairport.com:8081/nexus/content/repositories/mspairport-mule/</url>
 	   </snapshotRepository>
 	</distributionManagement>        
