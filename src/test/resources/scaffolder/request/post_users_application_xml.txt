@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user>
+  <firstName>Frank</firstName>
+  <lastName>Jones</lastName>
+  <middleName>B</middleName>
+  <department>IT</department>
+  <hireDate>12/01/2015</hireDate>
+  <statusDate>05/01/2016</statusDate>
+  <jobTitle>Developer</jobTitle>
+</user>

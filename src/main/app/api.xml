@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:secure-property-placeholder="http://www.mulesoft.org/schema/mule/secure-property-placeholder" xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
+http://www.mulesoft.org/schema/mule/secure-property-placeholder http://www.mulesoft.org/schema/mule/secure-property-placeholder/current/mule-secure-property-placeholder.xsd">
 
 
 	
     <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
     <apikit:config name="api-config" raml="api.raml" consoleEnabled="false" doc:name="Router"/>
-    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="dpayne-mac" password="1760" database="mac_users" doc:name="MySQL Configuration">
-        <db:connection-properties>
-            <db:property key="useSSL" value="false"/>
-        </db:connection-properties>
-    </db:mysql-config>
+    <db:generic-config name="SQLServer_Generic_Database_Configuration" url="${dbconnection}" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" doc:name="Generic Database Configuration"/>
+    <secure-property-placeholder:config name="Secure_Property_Placeholder" key="${vault.key}" location="user-administration-api-${mule.env}.properties" doc:name="Secure Property Placeholder"/>
+
     <flow name="api-main">
-        <http:listener config-ref="api-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <http:listener config-ref="api-httpListenerConfig" path="/api/useradmin/*" doc:name="HTTP"/>
         <apikit:router config-ref="api-config" doc:name="APIkit Router"/>
         <exception-strategy ref="api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
     </flow>
+
     <flow name="api-console">
-        <http:listener config-ref="api-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <http:listener config-ref="api-httpListenerConfig" path="/api-info/useradmin/*" doc:name="HTTP"/>
         <apikit:console config-ref="api-config" doc:name="APIkit Console"/>
     </flow>
     <flow name="delete:/users/{userId}:api-config">
-        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[delete from mac_users.users where userid = #[message.inboundProperties.'http.uri.params'.userId]]]></db:parameterized-query>
+        <db:delete config-ref="SQLServer_Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from dbo.mspmac_users where userid = #[message.inboundProperties.'http.uri.params'.userId]]]></db:parameterized-query>
         </db:delete>
 
     </flow>
     <flow name="get:/users:api-config">
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[select userid, firstname, lastname, middlename, department, hiredate, statusdate, jobtitle from mac_users.users]]></db:parameterized-query>
+        <db:select config-ref="SQLServer_Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select userid, firstname, lastname, middlename, department, hiredate, statusdate, jobtitle from dbo.mspmac_users]]></db:parameterized-query>
         </db:select>
         <dw:transform-message metadata:id="0148ed53-617e-4426-8e81-85454322ada1" doc:name="Transform Message">
+            <dw:input-payload doc:sample="sample_data\list_map.dwl"/>
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/json
 ---
@@ -49,11 +51,11 @@ payload map ((payload01 , indexOfPayload01) -> {
 	jobTitle: payload01.jobtitle
 })]]></dw:set-payload>
         </dw:transform-message>
-        <set-payload value="#[payload]" metadata:id="930506b2-eca1-4bd9-9adb-b558f180952f" doc:name="Set Payload"/>
+        <set-payload  metadata:id="930506b2-eca1-4bd9-9adb-b558f180952f" doc:name="Set Payload" value="#[payload]"/>
     </flow>
     <flow name="get:/users/{userId}:api-config">
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[select userid, firstname, lastname, middlename, department, hiredate, statusdate, jobtitle from mac_users.users where userid = #[message.inboundProperties.'http.uri.params'.userId]]]></db:parameterized-query>
+        <db:select config-ref="SQLServer_Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select userid, firstname, lastname, middlename, department, hiredate, statusdate, jobtitle from dbo.mspmac_users where userid = #[message.inboundProperties.'http.uri.params'.userId]]]></db:parameterized-query>
         </db:select>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
@@ -88,16 +90,16 @@ payload map ((payload01 , indexOfPayload01) -> {
 	statusdate: payload.user.statusDate
 }]]></dw:set-payload>
         </dw:transform-message>
-        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[INSERT INTO `mac_users`.`users`
+        <db:insert config-ref="SQLServer_Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO dbo.mspmac_users
 (
-`firstname`,
-`lastname`,
-`middlename`,
-`department`,
-`hiredate`,
-`statusdate`,
-`jobtitle`)
+firstname,
+lastname,
+middlename,
+department,
+hiredate,
+statusdate,
+jobtitle)
 VALUES
 (
 #[payload.firstname],

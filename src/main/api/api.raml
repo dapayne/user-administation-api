@@ -12,11 +12,9 @@ baseUri: http://server/api/{version}
         body:
           application/json:
             example: |
-              {
-                "users":
                 [
-                  "user": {
-                    "userId": "001",
+                  {
+                    "userId": "1",
                     "firstName": "John",
                     "lastName": "Smith",
                     "middleName": "A",
@@ -25,20 +23,17 @@ baseUri: http://server/api/{version}
                     "statusDate": "05/01/2016",
                     "jobTitle": "Developer"
                   },
-                  "user": {
-                    "userId": "003",
+                  {
+                    "userId": "2",
                     "firstName": "David",
                     "lastName": "Jones",
                     "middleName": "C",
                     "department": "HR",
-                    "hireDate": "5/01/2015",
+                    "hireDate": "05/01/2015",
                     "statusDate": "03/01/2016",
                     "jobTitle": "HR Analyst"
                   }                  
-                ],
-                "success": true,
-                "status": 200
-              }
+                ]
   post:
     description: Create a new user
     body:
@@ -74,8 +69,8 @@ baseUri: http://server/api/{version}
           body:
             application/json:
               example: |
-                {
-                  "user": {
+                [
+                  {
                     "userId": "001",
                     "firstName": "John",
                     "lastName": "Smith",
@@ -84,10 +79,8 @@ baseUri: http://server/api/{version}
                     "hireDate": "10/01/2015",
                     "statusDate": "05/01/2016",
                     "jobTitle": "Developer"
-                  }                  
-                  "success": true,
-                  "status": 200
-                }    
+                  }
+                ]                    
     delete:
       description: Delete the user with `userId = {userId}`
       responses:

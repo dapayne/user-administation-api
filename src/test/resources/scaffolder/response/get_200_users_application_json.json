@@ -1,0 +1,22 @@
+[
+  {
+    "userId": "1",
+    "firstName": "John",
+    "lastName": "Smith",
+    "middleName": "A",
+    "department": "IT",
+    "hireDate": "2015-10-01T00:00:00",
+    "statusDate": "2015-12-01T00:00:00",
+    "jobTitle": "Developer"
+  },
+  {
+    "userId": "2",
+    "firstName": "David",
+    "lastName": "Jones",
+    "middleName": "C",
+    "department": "HR",
+    "hireDate": "2015-10-01T00:00:00",
+    "statusDate": "2015-12-01T00:00:00",
+    "jobTitle": "HR Analyst"
+  }
+]
