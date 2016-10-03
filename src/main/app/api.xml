@@ -8,21 +8,18 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
 http://www.mulesoft.org/schema/mule/secure-property-placeholder http://www.mulesoft.org/schema/mule/secure-property-placeholder/current/mule-secure-property-placeholder.xsd">
 
-
-	
-    <http:listener-config name="api-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
     <apikit:config name="api-config" raml="api.raml" consoleEnabled="false" doc:name="Router"/>
     <db:generic-config name="SQLServer_Generic_Database_Configuration" url="${dbconnection}" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" doc:name="Generic Database Configuration"/>
     <secure-property-placeholder:config name="Secure_Property_Placeholder" key="${vault.key}" location="user-administration-api-${mule.env}.properties" doc:name="Secure Property Placeholder"/>
 
     <flow name="api-main">
-        <http:listener config-ref="api-httpListenerConfig" path="/api/useradmin/*" doc:name="HTTP"/>
+        <http:listener config-ref="mspmac_HTTP_Listener_Configuration" path="/api/useradmin/*" doc:name="HTTP"/>
         <apikit:router config-ref="api-config" doc:name="APIkit Router"/>
         <exception-strategy ref="api-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
     </flow>
 
     <flow name="api-console">
-        <http:listener config-ref="api-httpListenerConfig" path="/api-info/useradmin/*" doc:name="HTTP"/>
+        <http:listener config-ref="mspmac_HTTP_Listener_Configuration" path="/api-info/useradmin/*" doc:name="HTTP"/>
         <apikit:console config-ref="api-config" doc:name="APIkit Console"/>
     </flow>
     <flow name="delete:/users/{userId}:api-config">
